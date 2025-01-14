@@ -150,7 +150,7 @@ const OrderHistory = () => {
                           {item.menuItemId.name} x {item.quantity}
                         </span>
                         <span>
-                          ${(item.menuItemId.price * item.quantity).toFixed(2)}
+                          ₹{(item.menuItemId.price * item.quantity).toFixed(2)}
                         </span>
                       </>
                     ) : (
