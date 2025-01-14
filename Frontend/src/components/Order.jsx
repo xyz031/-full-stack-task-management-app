@@ -1,32 +1,29 @@
 import React, { useContext, useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { AppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
 
 const OrderHistory = () => {
   const { token, cart, setCart } = useContext(AppContext);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [placingOrder, setPlacingOrder] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const userId = localStorage.getItem('userId');
 
   const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   const handlePlaceOrder = useCallback(async () => {
     if (!userId) {
-      setError('User ID not found. Please log in again.');
+      toast.error('User ID not found. Please log in again.');
       return;
     }
 
     if (cart.length === 0) {
-      setError('Your cart is empty.');
+      toast.error('Your cart is empty.');
       return;
     }
 
     setPlacingOrder(true);
-    setError('');
-    setSuccess('');
 
     try {
       const orderData = {
@@ -41,14 +38,12 @@ const OrderHistory = () => {
         headers: { Authorization: `${token}` },
       });
 
-      setSuccess('Order placed successfully!');
+      toast.success('Order placed successfully!');
       setCart([]); // Clear cart after placing order
-
-      // Update order history by adding the newly placed order to the state
-      setOrders((prevOrders) => [response.data, ...prevOrders]);
+      setOrders((prevOrders) => [response.data, ...prevOrders]); // Add new order to history
     } catch (err) {
       console.error('Error placing order:', err);
-      setError('Failed to place order. Please try again.');
+      toast.error('Failed to place order. Please try again.');
     } finally {
       setPlacingOrder(false);
     }
@@ -57,7 +52,7 @@ const OrderHistory = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       if (!userId) {
-        setError('User ID not found. Please log in again.');
+        toast.error('User ID not found. Please log in again.');
         setLoading(false);
         return;
       }
@@ -69,7 +64,7 @@ const OrderHistory = () => {
         setOrders(response.data);
       } catch (error) {
         console.error('Error fetching orders:', error);
-        setError('Failed to fetch order history. Please try again later.');
+        toast.error('Failed to fetch order history. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -112,17 +107,12 @@ const OrderHistory = () => {
             </button>
           </div>
         )}
-
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-        {success && <p className="text-green-500 mt-2">{success}</p>}
       </div>
 
       <h2 className="text-2xl font-bold mb-4">Order History</h2>
 
-      {error && <p className="text-red-500">{error}</p>}
-
-      {orders.length === 0 && !loading && !error ? (
-        <p>No orders placed yet.</p>
+      {orders.length === 0 && !loading ? (
+        <p>No orders placed yet. Start ordering now!</p>
       ) : (
         <div className="space-y-4">
           {orders.map((order) => (
@@ -134,13 +124,13 @@ const OrderHistory = () => {
               <p className="text-sm text-gray-500">
                 Total Amount: ₹{order.totalAmount.toFixed(2)}
               </p>
-              <p
-                className={`text-sm font-medium ${
-                  order.status === 'Pending' ? 'text-yellow-500' : 'text-green-500'
+              <span
+                className={`text-sm font-medium py-1 px-2 rounded ${
+                  order.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700'
                 }`}
               >
                 Status: {order.status}
-              </p>
+              </span>
               <ul className="mt-2 space-y-1">
                 {order.items.map((item) => (
                   <li key={item.menuItemId?._id || item._id} className="flex justify-between">

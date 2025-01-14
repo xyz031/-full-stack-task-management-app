@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
 
     try {
-      const res = await axios.post('https://full-stack-task-management-app-m4rh.onrender.com/api/users/register', { username, password });
-      setSuccess('Registration successful! Redirecting to login...');
-      setTimeout(() => navigate('/'), 2000);
+      const res = await axios.post(
+        'https://full-stack-task-management-app-m4rh.onrender.com/api/users/register',
+        { username, password }
+      );
+      
+      toast.success('Registration successful! Redirecting to login...');
+      setTimeout(() => navigate('/'), 2000); // Redirect after showing toast
     } catch (error) {
       console.error('Registration failed:', error);
-      setError(error.response?.data?.message || 'Failed to register. Please try again.');
+      toast.error(error.response?.data?.message || 'Failed to register. Please try again.');
     }
   };
 
@@ -44,9 +45,9 @@ const Register = () => {
           className="w-full p-2 border rounded"
           required
         />
-        <button className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600">Register</button>
-        {error && <p className="text-red-500 mt-2 text-center">{error}</p>}
-        {success && <p className="text-green-500 mt-2 text-center">{success}</p>}
+        <button className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Register
+        </button>
         <p className="text-center text-sm mt-2">
           Already Registered?{' '}
           <Link to="/" className="text-blue-500 hover:underline">

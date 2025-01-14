@@ -1,7 +1,17 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React,{useContext} from 'react';
+import { Link, Navigate } from 'react-router-dom';
+import { AppContext } from '../context/AppContext';
+import { toast } from 'react-hot-toast';
 
 const Navbar = () => {
+
+  const { token } = useContext(AppContext);
+
+  if (!token) {
+    toast.error('You need to log in to access this page.');
+   
+  }
+  
   return (
     <nav className="bg-blue-500 text-white p-4">
       <div className="container mx-auto flex justify-between items-center">

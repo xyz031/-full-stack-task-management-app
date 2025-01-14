@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link for navigation
+import { useNavigate, Link } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
+import { toast } from 'react-hot-toast'; // Import toast
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -12,13 +13,20 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('https://full-stack-task-management-app-m4rh.onrender.com/api/users/login', { username, password });
+      const res = await axios.post('https://full-stack-task-management-app-m4rh.onrender.com/api/users/login', { 
+        username, 
+        password 
+      });
+
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('userId', res.data.user._id);
       setToken(res.data.token);
+      
+      toast.success('Login successful! Redirecting...');
       navigate('/menu');
     } catch (error) {
       console.error('Login failed:', error);
+      toast.error('Login failed. Please check your credentials.');
     }
   };
 
@@ -42,7 +50,9 @@ const Login = () => {
           className="w-full p-2 border rounded"
           required
         />
-        <button className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600">Login</button>
+        <button className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Login
+        </button>
         <p className="text-center text-sm mt-2">
           Don't have an account?{' '}
           <Link to="/register" className="text-blue-500 hover:underline">

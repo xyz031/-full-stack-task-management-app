@@ -1,13 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../context/AppContext';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const Menu = () => {
-  const { addToCart, cart, token, setCart } = useContext(AppContext);
+  const { addToCart, token, setCart } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [menuItems, setMenuItems] = useState([]);
-  const [success, setSuccess] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -24,17 +23,16 @@ const Menu = () => {
     });
   };
 
-  // Fetch menu items when the component is mounted or token changes
   useEffect(() => {
     const fetchItems = async () => {
       try {
         const res = await axios.get('https://full-stack-task-management-app-m4rh.onrender.com/api/menu', {
-          headers: { Authorization: `${token}` }
+          headers: { Authorization: `${token}` },
         });
-        setMenuItems(res.data.map(item => ({ ...item, id: item._id })));
+        setMenuItems(res.data.map((item) => ({ ...item, id: item._id })));
       } catch (err) {
         console.error(err);
-        setError('Failed to load menu items');
+        toast.error('Failed to load menu items');
       }
     };
 
@@ -46,8 +44,6 @@ const Menu = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    setSuccess('');
 
     try {
       if (editId) {
@@ -57,7 +53,7 @@ const Menu = () => {
           formData,
           { headers: { Authorization: `${token}` } }
         );
-        setSuccess('Menu item updated successfully!');
+        toast.success('Menu item updated successfully!');
         setEditId(null);
       } else {
         // Create new menu item
@@ -66,17 +62,17 @@ const Menu = () => {
           formData,
           { headers: { Authorization: `${token}` } }
         );
-        setSuccess('Menu item added successfully!');
+        toast.success('Menu item added successfully!');
       }
-      // Refresh the menu items after adding/updating
+
       const updatedMenuItems = await axios.get('https://full-stack-task-management-app-m4rh.onrender.com/api/menu', {
-        headers: { Authorization: `${token}` }
+        headers: { Authorization: `${token}` },
       });
       setMenuItems(updatedMenuItems.data);
       setFormData({ name: '', category: '', price: '', availability: false });
     } catch (err) {
-      console.log(err);
-      setError('Failed to save menu item');
+      console.error(err);
+      toast.error('Failed to save menu item');
     } finally {
       setLoading(false);
     }
@@ -91,21 +87,19 @@ const Menu = () => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
 
     setLoading(true);
-    setError('');
-    setSuccess('');
 
     try {
       await axios.delete(`https://full-stack-task-management-app-m4rh.onrender.com/api/menu/${id}`, {
         headers: { Authorization: `${token}` },
       });
-      setSuccess('Menu item deleted successfully');
-      // Refresh menu items after deletion
+      toast.success('Menu item deleted successfully');
       const updatedMenuItems = await axios.get('https://full-stack-task-management-app-m4rh.onrender.com/api/menu', {
-        headers: { Authorization: `${token}` }
+        headers: { Authorization: `${token}` },
       });
       setMenuItems(updatedMenuItems.data);
     } catch (err) {
-      setError('Failed to delete menu item');
+      console.error(err);
+      toast.error('Failed to delete menu item');
     } finally {
       setLoading(false);
     }
@@ -114,10 +108,6 @@ const Menu = () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Menu Management</h1>
-
-      {/* Error or success message */}
-      {error && <p className="text-red-500">{error}</p>}
-      {success && <p className="text-green-500">{success}</p>}
 
       {/* Form for creating/updating menu items */}
       <form onSubmit={handleSubmit} className="mb-4">
@@ -175,7 +165,7 @@ const Menu = () => {
         </button>
       </form>
 
-      {/* Display menu items in a grid layout */}
+      {/* Display menu items */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {menuItems.map((item) => (
           <div key={item._id} className="p-4 bg-white shadow rounded">
