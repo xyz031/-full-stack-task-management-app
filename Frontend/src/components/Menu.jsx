@@ -29,6 +29,7 @@ const Menu = () => {
     setError('');
     setSuccess('');
 
+    
     try {
       if (editId) {
         // Update existing menu item
