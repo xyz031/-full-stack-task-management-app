@@ -37,7 +37,7 @@ const OrderHistory = () => {
         })),
       };
 
-      await axios.post('http://localhost:5000/api/orders', orderData, {
+      await axios.post('https://full-stack-task-management-app-m4rh.onrender.com/api/orders', orderData, {
         headers: { Authorization: `${token}` },
       });
 
@@ -60,7 +60,7 @@ const OrderHistory = () => {
       }
 
       try {
-        const response = await axios.get(`http://localhost:5000/api/orders/${userId}`, {
+        const response = await axios.get(`https://full-stack-task-management-app-m4rh.onrender.com/api/orders/${userId}`, {
           headers: { Authorization: `${token}` },
         });
         setOrders(response.data);

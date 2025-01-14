@@ -15,7 +15,7 @@ const Register = () => {
     setSuccess('');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/users/register', { username, password });
+      const res = await axios.post('https://full-stack-task-management-app-m4rh.onrender.com/api/users/register', { username, password });
       setSuccess('Registration successful! Redirecting to login...');
       setTimeout(() => navigate('/'), 2000);
     } catch (error) {

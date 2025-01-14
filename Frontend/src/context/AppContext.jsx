@@ -12,7 +12,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     if (token) {
       axios
-        .get('http://localhost:5000/api/menu', { headers: { Authorization: `${token}` } })
+        .get('https://full-stack-task-management-app-m4rh.onrender.com/api/menu', { headers: { Authorization: `${token}` } })
         .then((res) => setMenuItems(res.data.map((item) => ({ ...item, id: item._id }))))
         .catch((err) => console.error(err));
     }

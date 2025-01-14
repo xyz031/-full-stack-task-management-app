@@ -32,13 +32,13 @@ const Menu = () => {
     try {
       if (editId) {
         // Update existing menu item
-        await axios.put(`http://localhost:5000/api/menu/${editId}`, formData, {
+        await axios.put(`https://full-stack-task-management-app-m4rh.onrender.com/api/menu/${editId}`, formData, {
           headers: { Authorization: `${token}` },
         });
         setEditId(null);
       } else {
         // Create new menu item
-        await axios.post('http://localhost:5000/api/menu', formData, {
+        await axios.post('https://full-stack-task-management-app-m4rh.onrender.com/api/menu', formData, {
           headers: { Authorization: `${token}` },
         });
       }
@@ -64,7 +64,7 @@ const Menu = () => {
     setError('');
     setSuccess('');
     try {
-      await axios.delete(`http://localhost:5000/api/menu/${id}`, {
+      await axios.delete(`https://full-stack-task-management-app-m4rh.onrender.com/api/menu/${id}`, {
         headers: { Authorization: `${token}` },
       });
       fetchMenuItems();
