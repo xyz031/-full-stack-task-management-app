@@ -5,18 +5,11 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
-  const [menuItems, setMenuItems] = useState([]);
+
   const [cart, setCart] = useState([]);  // Ensure cart is initialized as an empty array
   const [notification, setNotification] = useState('');
 
-  useEffect(() => {
-    if (token) {
-      axios
-        .get('https://full-stack-task-management-app-m4rh.onrender.com/api/menu', { headers: { Authorization: `${token}` } })
-        .then((res) => setMenuItems(res.data.map((item) => ({ ...item, id: item._id }))))
-        .catch((err) => console.error(err));
-    }
-  }, [token]);
+
   
   
 
@@ -50,7 +43,7 @@ export const AppProvider = ({ children }) => {
   
 
   return (
-    <AppContext.Provider value={{ token, setToken, menuItems, cart,setCart, addToCart }}>
+    <AppContext.Provider value={{ token, setToken,  cart,setCart, addToCart }}>
       {children}
       {notification && (
         <div className="fixed top-4 right-4 p-3 bg-green-500 text-white rounded shadow">

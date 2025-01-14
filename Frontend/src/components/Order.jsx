@@ -37,12 +37,15 @@ const OrderHistory = () => {
         })),
       };
 
-      await axios.post('https://full-stack-task-management-app-m4rh.onrender.com/api/orders', orderData, {
+      const response = await axios.post('https://full-stack-task-management-app-m4rh.onrender.com/api/orders', orderData, {
         headers: { Authorization: `${token}` },
       });
 
       setSuccess('Order placed successfully!');
       setCart([]); // Clear cart after placing order
+
+      // Update order history by adding the newly placed order to the state
+      setOrders((prevOrders) => [response.data, ...prevOrders]);
     } catch (err) {
       console.error('Error placing order:', err);
       setError('Failed to place order. Please try again.');
@@ -73,7 +76,7 @@ const OrderHistory = () => {
     };
 
     if (token) fetchOrders();
-  }, [token, userId]);
+  }, [token, userId,cart]);
 
   if (loading) {
     return <div className="flex items-center justify-center h-screen">Loading...</div>;

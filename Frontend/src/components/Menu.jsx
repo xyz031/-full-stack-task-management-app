@@ -1,11 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../context/AppContext';
 import axios from 'axios';
 
 const Menu = () => {
-  const { menuItems, addToCart, cart, token, setCart, fetchMenuItems } = useContext(AppContext);
+  const { addToCart, cart, token, setCart } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [menuItems, setMenuItems] = useState([]);
   const [success, setSuccess] = useState('');
   const [formData, setFormData] = useState({
     name: '',
@@ -23,30 +24,58 @@ const Menu = () => {
     });
   };
 
+  // Fetch menu items when the component is mounted or token changes
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const res = await axios.get('https://full-stack-task-management-app-m4rh.onrender.com/api/menu', {
+          headers: { Authorization: `${token}` }
+        });
+        setMenuItems(res.data.map(item => ({ ...item, id: item._id })));
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load menu items');
+      }
+    };
+
+    if (token) {
+      fetchItems();
+    }
+  }, [token]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     setSuccess('');
 
-    
     try {
       if (editId) {
         // Update existing menu item
-        await axios.put(`https://full-stack-task-management-app-m4rh.onrender.com/api/menu/${editId}`, formData, {
-          headers: { Authorization: `${token}` },
-        });
+        await axios.put(
+          `https://full-stack-task-management-app-m4rh.onrender.com/api/menu/${editId}`,
+          formData,
+          { headers: { Authorization: `${token}` } }
+        );
+        setSuccess('Menu item updated successfully!');
         setEditId(null);
       } else {
         // Create new menu item
-        await axios.post('https://full-stack-task-management-app-m4rh.onrender.com/api/menu', formData, {
-          headers: { Authorization: `${token}` },
-        });
+        await axios.post(
+          'https://full-stack-task-management-app-m4rh.onrender.com/api/menu',
+          formData,
+          { headers: { Authorization: `${token}` } }
+        );
+        setSuccess('Menu item added successfully!');
       }
-      fetchMenuItems(); // Refresh menu items after adding/updating
+      // Refresh the menu items after adding/updating
+      const updatedMenuItems = await axios.get('https://full-stack-task-management-app-m4rh.onrender.com/api/menu', {
+        headers: { Authorization: `${token}` }
+      });
+      setMenuItems(updatedMenuItems.data);
       setFormData({ name: '', category: '', price: '', availability: false });
-      setSuccess('Menu item saved successfully!');
     } catch (err) {
+      console.log(err);
       setError('Failed to save menu item');
     } finally {
       setLoading(false);
@@ -64,12 +93,17 @@ const Menu = () => {
     setLoading(true);
     setError('');
     setSuccess('');
+
     try {
       await axios.delete(`https://full-stack-task-management-app-m4rh.onrender.com/api/menu/${id}`, {
         headers: { Authorization: `${token}` },
       });
-      fetchMenuItems();
       setSuccess('Menu item deleted successfully');
+      // Refresh menu items after deletion
+      const updatedMenuItems = await axios.get('https://full-stack-task-management-app-m4rh.onrender.com/api/menu', {
+        headers: { Authorization: `${token}` }
+      });
+      setMenuItems(updatedMenuItems.data);
     } catch (err) {
       setError('Failed to delete menu item');
     } finally {
