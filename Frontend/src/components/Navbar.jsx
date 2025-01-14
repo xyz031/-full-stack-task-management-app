@@ -19,7 +19,6 @@ const Navbar = () => {
               Order
             </Link>
           </li>
-        
         </ul>
       </div>
     </nav>
