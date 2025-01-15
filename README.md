@@ -127,15 +127,18 @@ food-delivery-app/
 ## Screenshots
 
 1. **Login Page**
-   ![image](https://github.com/user-attachments/assets/4dad6eda-89a5-432a-91c9-8bf190f00ec8)
+   ![image](https://github.com/user-attachments/assets/57c89a7e-ac42-46c8-8d21-2a4f19755996)
+
 
 
 2. **Menu Page**
-   ![image](https://github.com/user-attachments/assets/b4ad196b-1853-4d8e-97b8-8f1b697ac7e0)
+   ![image](https://github.com/user-attachments/assets/57eddc04-6372-4a0e-9ea7-61bb8dc614a6)
+
 
 
 3. **Order History Page**
-   ![image](https://github.com/user-attachments/assets/f7e3d7e8-c0b1-4a54-9f43-30a4e49195e0)
+   ![image](https://github.com/user-attachments/assets/d5c92249-d726-4532-ab36-10db8efc8cf6)
+
 
 
 ---
