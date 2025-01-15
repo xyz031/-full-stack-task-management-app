@@ -26,7 +26,10 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div
+      className="flex items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('https://wallpapers.com/images/hd/food-4k-1vrcb0mw76zcg4qf.jpg')" }}
+    >
       <form onSubmit={handleSubmit} className="p-6 bg-white shadow-md rounded w-80 space-y-4">
         <h2 className="text-2xl font-bold text-center">Register</h2>
         <input

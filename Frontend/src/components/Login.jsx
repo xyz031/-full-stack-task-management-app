@@ -13,15 +13,15 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('https://full-stack-task-management-app-m4rh.onrender.com/api/users/login', { 
-        username, 
-        password 
-      });
+      const res = await axios.post(
+        'https://full-stack-task-management-app-m4rh.onrender.com/api/users/login',
+        { username, password }
+      );
 
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('userId', res.data.user._id);
       setToken(res.data.token);
-      
+
       toast.success('Login successful! Redirecting...');
       navigate('/menu');
     } catch (error) {
@@ -31,8 +31,14 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form onSubmit={handleSubmit} className="p-6 bg-white shadow-md rounded w-80 space-y-4">
+    <div
+      className="flex items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('https://wallpapers.com/images/hd/food-4k-1vrcb0mw76zcg4qf.jpg')" }}
+    >
+      <form
+        onSubmit={handleSubmit}
+        className="p-6 bg-white shadow-md rounded w-80 space-y-4"
+      >
         <h2 className="text-2xl font-bold text-center">Login</h2>
         <input
           type="text"
